@@ -16,9 +16,20 @@ library(plotly)
 ```{r, read in data}
 
 data <-read_excel("Track two dialogue database.xlsx") %>% 
+  
+  # read in data 
+  
   clean_names() %>% 
+  
+  # clean it up-- some column titles imported wierdly from the excel file 
+  
   pivot_longer(cols = start_date:end_date, names_to = "start_end", values_to = "year") %>% 
+  
+  # pivot longer to get start and end dates in same column 
+  
   mutate("Dialogue" = dialgoues)
+
+  # use mutate to edit out a typo 
 
 ```
 
@@ -26,19 +37,47 @@ data <-read_excel("Track two dialogue database.xlsx") %>%
 
 
  plot <- ggplot(data) +
+  
+  # make a ggplot 
+  
   geom_point(aes(y = Dialogue, x =year, color = strong_focus_on_arms_control)) +
+  
+  # add geom_point layer to empahsize start and end of dialogues, also so that one-year long 
+  # dialogues show up 
+  
   geom_line(aes(y = Dialogue, x = year, color = strong_focus_on_arms_control)) +
+  
+  # add geom_line layer to show duration of dialogues 
+  
   geom_vline(xintercept = 1991, linetype = "dotted")+
+  
+  # add line to show end of USSR 
+  
   scale_x_continuous(breaks = c(1960, 1970, 1980, 1990, 2000, 2010, 2020))+
+  
+  # add breaks so that every 10 years are marked 
+  
   theme_minimal()+
+  
+  # set theme 
+  
   theme(axis.text.y = element_blank(), axis.title.y = element_blank())+
-  theme(legend.position = "bottom")+
+  
+  # take out very long x axis labels 
+
   labs(title = "Selected U.S. Russia Track Two Dialogues on Nuclear Issues, 1957-2020", 
-       x = "Year", 
-       color = "Exclusive focus on arms control?")+
+       x = "Year")+
+  
+  # add title and x-axis label 
+  
   theme(plot.title = element_text(hjust = 0.5))
   
+  # center title 
+  
 ggplotly(p = plot, tooltip = "Dialogue") %>% 
+  
+  # plotly it, mostly for the hovertext option. Use tooltip so that hovertext shows 
+  # the name of the dialogue 
   layout(
     legend = list(
       x = 0.05, 
@@ -46,5 +85,8 @@ ggplotly(p = plot, tooltip = "Dialogue") %>%
       title = list(text = "Exclusive focus on arms control?"), 
       borderwidth = 1)
   )
+
+# add legend to plotly 
+
 ```
 
