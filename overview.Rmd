@@ -70,23 +70,36 @@ plot <- ggplot(data) +
   
   theme_minimal()+
   
-  theme(axis.title.y = element_blank(), axis.text.y = element_blank(), legend.title = element_blank())+
+  theme(axis.title.y = element_blank(), axis.text.y = element_blank())+
   
   # take out very long x axis labels 
 
   labs(title = "Selected U.S. Russia Track Two Enagements, 1957-2020", 
-       x = "Year")+
+       x = "Year", 
+       color = "Exclusive focus on arms control?")+
   
   # add title and x-axis label 
+  
+  theme(legend.position= c(0.2, 0.2), legend.background = element_rect(fill = "white"))+ 
   
   theme(plot.title = element_text(hjust = 0.5))
   
   # center title 
-  
-ggplotly(p = plot, tooltip = "text")
+
+
+ggsave("plot.png", plot = plot, height = 10, width = 24, units = "cm")
+
+ggplotly(p = plot, tooltip = "text") %>%
   
   # plotly it, mostly for the hovertext option. Use tooltip so that hovertext shows 
   # the name of the dialogue 
+layout(
+    legend = list(
+      x = 0.05, 
+      y = 0.1, 
+      title = list(text = "Exclusive focus on arms control?"), 
+      borderwidth = 1)
+  )
 
 
 # add legend to plotly 
