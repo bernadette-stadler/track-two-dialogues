@@ -1,0 +1,81 @@
+---
+title: "ITA network map"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(igraph)
+library(janitor)
+```
+
+```{r read in data}
+links <- read_excel("ITA.xlsx", sheet = 1) %>% clean_names()
+nodes <-read_excel("ITA.xlsx", sheet = 2) %>% clean_names()
+
+links2 <- read_excel("CISAC.xlsx", sheet = 1) %>% clean_names()
+nodes2 <-read_excel("CISAC.xlsx", sheet = 2) %>% clean_names()
+
+```
+
+```{r make graph}
+net <- graph.data.frame(links, nodes, directed=T)
+
+
+colrs <- c("dodgerblue2", "darkorange2")
+V(net)$colors= colrs[V(net)$country]
+
+png("ITA network.png", 600, 450)
+
+plot(net, vertex.shape="none", 
+     vertex.label=V(net)$last_name, 
+     vertex.label.color = V(net)$colors,
+     vertex.label.font=2, 
+     vertex.label.cex= 0.9, 
+     edge.color="gray85", 
+     edge.arrow.size=0, 
+     main = "Ivanov-Talbott-Albright Dialogue Network Map", 
+     frame = TRUE)
+
+legend(x= 1.1, y= -0.7, 
+       c("Russia","United States"), 
+       pch=21, col="gray55", pt.bg=colrs, 
+       pt.cex=2, cex=.8, bty="o", ncol=1, 
+       text.col = "gray55")
+
+dev.off()
+
+
+```
+
+```{r CISAC graph}
+net <- graph.data.frame(links2, nodes2, directed=T)
+
+
+colrs <- c("dodgerblue2", "darkorange2")
+V(net)$colors= colrs[V(net)$country]
+
+png("CISAC network.png", 600, 450)
+
+plot(net, vertex.shape="none", 
+     vertex.label=V(net)$last_name, 
+     vertex.label.color = V(net)$colors,
+     vertex.label.font=2, 
+     vertex.label.cex= 0.7, 
+     edge.color="gray85", 
+     edge.arrow.size=0, 
+     main = "Possible CISAC Dialogue Network, late 2000s", 
+     frame = TRUE)
+
+legend(x= 1.1, y= -0.7, 
+       c("Russia","United States"), 
+       pch=21, col="gray55", pt.bg=colrs, 
+       pt.cex=2, cex=.8, bty="o", ncol=1, 
+       text.col = "gray55")
+
+dev.off()
+
+
+```
+
